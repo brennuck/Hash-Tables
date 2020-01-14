@@ -22,7 +22,7 @@ def append(self, value):
 
 def resize(self):
     self.capacity *= 2
-    new_storage = [None] = self.capacity
+    new_storage = [None] * self.capacity
     for i in range(self.count):
         new_storage[i] = self.storage[i]
     self.storage = new_storage
