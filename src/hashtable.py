@@ -51,7 +51,24 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        #check if there is already a LL
+        if self.storage[index] is not None:
+            # if yes, check current to track if it is the key
+            current = self.storage[index]
+            found = False
+            while current and not found:
+                # if key found then update it
+                if current.key == key:
+                    current.value = value
+                    found = True
+                #if not found, create new node
+                elif current.next == None:
+                    current.next = LinkedPair(key, value)
+
+
+
+        self.storage[index] = LinkedPair(key, value)
 
 
 
@@ -63,7 +80,14 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        key = self._hash(key)
+        current = self.storage[0]
+
+        while current.next is not None: 
+            if current.key is key: 
+                return key.value
+            else:
+                current = current.next
 
 
     def retrieve(self, key):
