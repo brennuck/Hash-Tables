@@ -51,9 +51,23 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        current = self.storage[index]
+        last = None
 
-
+        # Try to find node already allocated with the same key
+        while (current is not None and current.key != key):
+            last = current
+            current = last.next
+        # If a node is found with the same key
+        if (current is not None):
+            current.value = value
+        # if a node is not found
+        else:
+            new = LinkedPair(key, value)
+            new.next = self.storage[index]
+            self.storage[index] = new
+    
 
     def remove(self, key):
         '''
@@ -63,7 +77,25 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        last = None
+        current = self.storage[index]
+
+        # While the node isn't located, keep traversing
+        while (current is not None and current.key != key):
+            last = current
+            current = current.next
+        # If the key couldn't be found
+        if (self.storage[index] is None):
+            print("Error! Couldn't find key")
+        # If it is found
+        else:
+            # Removing the first element in the linkedlist
+            if (last is None):
+                self.storage[index] = current.next
+            # If the one you want to remove is in the middle
+            else:
+                last.next = current.next
 
 
     def retrieve(self, key):
@@ -74,7 +106,15 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+        current = self.storage[index]
+
+        # While node is not found
+        while current is not None:
+            # If the key matches
+            if (current.key == key):
+                return current.value
+            current = current.next
 
 
     def resize(self):
@@ -84,7 +124,18 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        old_hash = self.storage
+        self.capacity *= 2
+        self.storage = [None] * self.capacity
+
+        current = None
+
+        for i in old_hash:
+            current = i
+            # While node is not found
+            while (current is not None):
+                self.insert(current.key, current.value)
+                current = current.next
 
 
 
