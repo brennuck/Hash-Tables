@@ -52,12 +52,21 @@ class HashTable:
         Fill this in.
         '''
         index = self._hash_mod(key)
+        current = self.storage[index]
+        last = None
 
-        if self.storage[index] is not None:
-            print(f"WARNING: Collision has occured at {index}")
+        # Try to find node already allocated with the same key
+        while (current is not None and current.key != key):
+            last = current
+            current = last.next
+        # If a node is found with the same key
+        if (current is not None):
+            current.value = value
+        # if a node is not found
         else:
-            self.storage[index] = (key, value)
-        return
+            new = LinkedPair(key, value)
+            new.next = self.storage[index]
+            self.storage[index] = new
     
 
     def remove(self, key):
@@ -69,15 +78,24 @@ class HashTable:
         Fill this in.
         '''
         index = self._hash_mod(key)
+        last = None
+        current = self.storage[index]
 
-        if self.storage[index] is not None:
-            if self.storage[index][0] == key:
-                self.storage[index] = None
-            else:
-                print(f"WARNING: Collision has occured at {index}")
+        # While the node isn't located, keep traversing
+        while (current is not None and current.key != key):
+            last = current
+            current = current.next
+        # If the key couldn't be found
+        if (self.storage[index] is None):
+            print("Error! Couldn't find key")
+        # If it is found
         else:
-            print(f"WARNING: key ({key}) not found")
-        return
+            # Removing the first element in the linkedlist
+            if (last is None):
+                self.storage[index] = current.next
+            # If the one you want to remove is in the middle
+            else:
+                last.next = current.next
 
 
     def retrieve(self, key):
@@ -89,15 +107,14 @@ class HashTable:
         Fill this in.
         '''
         index = self._hash_mod(key)
+        current = self.storage[index]
 
-        if self.storage[index] is not None:
-            if self.storage[index][0] == key:
-                return self.storage[index][1]
-            else:
-                print(f"WARNING: Collision has occured at {index}")
-        else:
-            return None
-        return
+        # While node is not found
+        while current is not None:
+            # If the key matches
+            if (current.key == key):
+                return current.value
+            current = current.next
 
 
     def resize(self):
@@ -107,12 +124,18 @@ class HashTable:
 
         Fill this in.
         '''
-        old_storage = self.storage
+        old_hash = self.storage
         self.capacity *= 2
         self.storage = [None] * self.capacity
 
-        for item in old_storage:
-            self.insert(item[0], item[1])
+        current = None
+
+        for i in old_hash:
+            current = i
+            # While node is not found
+            while (current is not None):
+                self.insert(current.key, current.value)
+                current = current.next
 
 
 
