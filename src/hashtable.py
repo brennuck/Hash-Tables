@@ -51,9 +51,14 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
 
-
+        if self.storage[index] is not None:
+            print(f"WARNING: Collision has occured at {index}")
+        else:
+            self.storage[index] = (key, value)
+        return
+    
 
     def remove(self, key):
         '''
@@ -63,7 +68,16 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+
+        if self.storage[index] is not None:
+            if self.storage[index][0] == key:
+                self.storage[index] = None
+            else:
+                print(f"WARNING: Collision has occured at {index}")
+        else:
+            print(f"WARNING: key ({key}) not found")
+        return
 
 
     def retrieve(self, key):
@@ -74,7 +88,16 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        index = self._hash_mod(key)
+
+        if self.storage[index] is not None:
+            if self.storage[index][0] == key:
+                return self.storage[index][1]
+            else:
+                print(f"WARNING: Collision has occured at {index}")
+        else:
+            return None
+        return
 
 
     def resize(self):
@@ -84,7 +107,12 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        old_storage = self.storage
+        self.capacity *= 2
+        self.storage = [None] * self.capacity
+
+        for item in old_storage:
+            self.insert(item[0], item[1])
 
 
 
